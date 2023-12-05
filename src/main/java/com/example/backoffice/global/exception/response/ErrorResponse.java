@@ -12,12 +12,15 @@ import java.util.List;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public record ErrorResponse(
-    String code,
-    String message,
+public class ErrorResponse {
+
+    private final String code;
+    private final String message;
+
     @JsonInclude(Include.NON_EMPTY)
-    List<ValidationError> errors
-) {
+    private final List<ValidationError> errors;
+
+
     @Getter
     @Builder
     @RequiredArgsConstructor
