@@ -1,8 +1,9 @@
 package com.example.backoffice.global.security;
 
-import com.example.backoffice.global.exception.response.ErrorResponse;
-import com.example.backoffice.domain.user.entity.UserDetailsImpl;
+
 import com.example.backoffice.domain.user.service.UserDetailsServiceImpl;
+import com.example.backoffice.global.common.CommonResponseDTO;
+import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -52,15 +53,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 // -> 이제 @AuthenticationPrincipal 로 조회할 수 있음
             } else {
                 // 인증정보가 존재하지 않을때
-                ErrorResponse errorResponse = ErrorResponse.builder().code(String.valueOf(HttpStatus.FORBIDDEN.value())).
-                        message("토큰이 유효하지 않습니다.").build();
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                CommonResponseDTO commonResponseDTO = new CommonResponseDTO("토큰이 유효하지 않습니다.", HttpStatus.FORBIDDEN.value());
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json; charset=UTF-8");
-//                response.getWriter().write(objectMapper.writeValueAsString());
-                return;
+                response.getWriter().write(objectMapper.writeValueAsString(commonResponseDTO));
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
