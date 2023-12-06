@@ -1,7 +1,7 @@
 package com.example.backoffice.domain.user.service;
 
 import com.example.backoffice.domain.user.entity.User;
-import com.example.backoffice.domain.user.UserRepository;
+import com.example.backoffice.domain.user.repository.UserRepository;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

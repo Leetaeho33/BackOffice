@@ -1,17 +1,16 @@
 package com.example.backoffice.domain.user.service;
 
 import com.example.backoffice.domain.user.dto.*;
+import com.example.backoffice.domain.user.entity.PasswordHistory;
 import com.example.backoffice.domain.user.entity.User;
-import com.example.backoffice.domain.user.UserRepository;
-import com.example.backoffice.domain.user.entity.UserDetailsImpl;
+import com.example.backoffice.domain.user.repository.PasswordHistoryRepository;
+import com.example.backoffice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLOutput;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +19,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordHistoryRepository passwordHistoryRepository;
     private final PasswordEncoder passwordEncoder;
     User user;
 
@@ -36,7 +36,12 @@ public class UserService {
         }
         User user = User.builder().username(username).password(password)
                 .mbti(mbti).intro(intro).build();
+        PasswordHistory passwordHistory = PasswordHistory.builder().
+                password(password).user(user).build();
+        // 연관관계 맺었을 때 save 순서가 중요하다. 왜냐하면 passwordHistory 는 user_id를 가져야 하는데
+        // user보다 먼저 save되면 user의 id를 몰라서 user_id를 가질 수 없다.
         userRepository.save(user);
+        passwordHistoryRepository.save(passwordHistory);
     }
 
     public void login(LoginRequestDTO loginRequestDTO) {
@@ -58,7 +63,7 @@ public class UserService {
     public UpdateUserResponseDTO updateUser(User requestsUser, UpdateUserRequestDTO updateUserRequestDTO) {
         user = checkLogin(requestsUser);
         user.updateUser(updateUserRequestDTO);
-        user.setPassword(passwordEncoder.encode(updateUserRequestDTO.getPassword()));
+        updatePassword(user, updateUserRequestDTO);
         userRepository.save(user);
         return new UpdateUserResponseDTO(user);
     }
@@ -76,5 +81,28 @@ public class UserService {
             throw new NullPointerException("로그인 된 회원이 아닙니다.");
         }
         return user;
+    }
+    public void updatePassword(User user, UpdateUserRequestDTO updateUserRequestDTO){
+
+        if(!passwordEncoder.matches(updateUserRequestDTO.getPassword(), user.getPassword())){
+
+            PasswordHistory passwordHistory = PasswordHistory.builder().user(user).
+                    password(passwordEncoder.encode(updateUserRequestDTO.getPassword())).build();
+
+            List<PasswordHistory> passwordHistoryList =
+                    passwordHistoryRepository.findByUserId(user.getId());
+            for(int i = 0;i<passwordHistoryList.size();i++){
+                if(passwordEncoder.matches(updateUserRequestDTO.getPassword(),
+                        passwordHistoryList.get(i).getPassword())){
+                    throw new IllegalArgumentException("최근 3번안에 사용한 비밀번호는 사용할 수 없도록 제한합니다.");
+                }
+            }
+            passwordHistoryRepository.save(passwordHistory);
+            if(passwordHistoryList.size()>=3){
+                PasswordHistory lastPasswordHistory = passwordHistoryList.get(0);
+                passwordHistoryRepository.delete(lastPasswordHistory);
+                user.setPassword(passwordEncoder.encode(updateUserRequestDTO.getPassword()));
+            }
+        }
     }
 }

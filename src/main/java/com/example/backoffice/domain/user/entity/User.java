@@ -7,6 +7,8 @@ import lombok.*;
 import org.hibernate.sql.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -30,6 +32,8 @@ public class User {
     @Column
     private String intro;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<PasswordHistory> passwordHistoryList;
 
     public void updateUser(UpdateUserRequestDTO userRequestDTO){
         this.intro = userRequestDTO.getIntro();
