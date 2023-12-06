@@ -1,8 +1,6 @@
 package com.example.backoffice.domain.user;
 
-import com.example.backoffice.domain.user.dto.LoginRequestDTO;
-import com.example.backoffice.domain.user.dto.MypageResponseDTO;
-import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
+import com.example.backoffice.domain.user.dto.*;
 import com.example.backoffice.domain.user.service.UserService;
 import com.example.backoffice.global.common.CommonCode;
 import com.example.backoffice.global.security.JwtUtil;
@@ -38,6 +36,12 @@ public class UserController {
     @GetMapping
     public MypageResponseDTO mypage(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.getMypage(userDetails);
+    }
+
+    @PatchMapping
+    public UpdateUserResponseDTO updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @RequestBody UpdateUserRequestDTO updateUserRequestDTO){
+        return userService.updateUser(userDetails, updateUserRequestDTO);
     }
 
 }

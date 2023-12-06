@@ -1,11 +1,13 @@
 package com.example.backoffice.domain.user.entity;
 
 import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
+import com.example.backoffice.domain.user.dto.UpdateUserRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.sql.Update;
 
 @Entity
 @Table(name = "users")
@@ -37,5 +39,9 @@ public class User {
         this.mbti = signUpRequestDTO.getMbti();
         this.intro = signUpRequestDTO.getIntro();
     }
-
+    public void updateUser(UpdateUserRequestDTO userRequestDTO){
+        this.intro = userRequestDTO.getIntro();
+        this.mbti = userRequestDTO.getMbti();
+        this.password = userRequestDTO.getPassword();
+    }
 }

@@ -1,15 +1,15 @@
 package com.example.backoffice.domain.user.service;
 
-import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
+import com.example.backoffice.domain.user.dto.*;
 import com.example.backoffice.domain.user.entity.User;
 import com.example.backoffice.domain.user.UserRepository;
-import com.example.backoffice.domain.user.dto.LoginRequestDTO;
-import com.example.backoffice.domain.user.dto.MypageResponseDTO;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.Optional;
 
 @Service
@@ -46,5 +46,18 @@ public class UserService {
             throw new NullPointerException("로그인 된 회원이 아닙니다.");
         }
         return new MypageResponseDTO(user);
+    }
+
+    @Transactional
+    public UpdateUserResponseDTO updateUser(UserDetailsImpl userDetails, UpdateUserRequestDTO updateUserRequestDTO) {
+        if(userDetails!=null) {
+            user = userDetails.getUser();
+        } else {
+            throw new NullPointerException("로그인 된 회원이 아닙니다.");
+        }
+        user.updateUser(updateUserRequestDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return new UpdateUserResponseDTO(user);
     }
 }
