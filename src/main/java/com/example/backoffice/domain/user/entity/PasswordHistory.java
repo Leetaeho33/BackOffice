@@ -1,6 +1,7 @@
 package com.example.backoffice.domain.user.entity;
 
 import com.example.backoffice.domain.comment.entity.Timestamped;
+import com.example.backoffice.domain.utils.BaseTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.Queue;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordHistory extends Timestamped {
+public class PasswordHistory extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
