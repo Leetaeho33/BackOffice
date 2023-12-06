@@ -1,4 +1,4 @@
-package com.example.backoffice.domain.user;
+package com.example.backoffice.domain.user.controller;
 
 
 import com.example.backoffice.domain.user.dto.*;
