@@ -1,15 +1,14 @@
-package com.example.backoffice.user;
+package com.example.backoffice.domain.user;
 
+import com.example.backoffice.domain.user.entity.UserDetailsImpl;
+import com.example.backoffice.domain.user.service.UserService;
 import com.example.backoffice.global.common.CommonCode;
 import com.example.backoffice.global.security.JwtUtil;
-import com.example.backoffice.user.dto.LoginRequestDTO;
-import com.example.backoffice.user.dto.MypageResponseDTO;
-import com.example.backoffice.user.dto.SignUpRequestDTO;
-import com.example.backoffice.user.entity.UserDetailsImpl;
-import com.example.backoffice.user.service.UserService;
+import com.example.backoffice.domain.user.dto.LoginRequestDTO;
+import com.example.backoffice.domain.user.dto.MypageResponseDTO;
+import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

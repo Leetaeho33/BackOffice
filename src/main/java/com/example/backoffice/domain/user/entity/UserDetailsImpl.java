@@ -1,4 +1,4 @@
-package com.example.backoffice.user.entity;
+package com.example.backoffice.domain.user.entity;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

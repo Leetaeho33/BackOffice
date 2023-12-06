@@ -1,4 +1,4 @@
-package com.example.backoffice.user.dto;
+package com.example.backoffice.domain.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;

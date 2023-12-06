@@ -1,6 +1,6 @@
-package com.example.backoffice.user.dto;
+package com.example.backoffice.domain.user.dto;
 
-import com.example.backoffice.user.entity.User;
+import com.example.backoffice.domain.user.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
