@@ -1,7 +1,7 @@
 package com.example.backoffice.domain.post.entity;
 
 import com.example.backoffice.domain.comment.entity.Comment;
-import com.example.backoffice.domain.post.constant.PostLikeConstant;
+import com.example.backoffice.domain.post.constant.PostConstant;
 import com.example.backoffice.domain.post.dto.PostUpdateRequsetDto;
 import com.example.backoffice.domain.postLike.entity.PostLike;
 import com.example.backoffice.domain.user.entity.User;
@@ -32,9 +32,8 @@ public class Post extends BaseTime {
     @Column(nullable = false)
     private String content;
 
-    @NotNull
-    private Long postLikeCnt = PostLikeConstant.DEFAULT_LIKE_CNT;
-
+    @Column(nullable = false)
+    private Long postLikeCnt = PostConstant.DEFAULT_LIKE_CNT;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

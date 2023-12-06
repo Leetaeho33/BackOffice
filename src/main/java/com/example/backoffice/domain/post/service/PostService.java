@@ -1,5 +1,6 @@
 package com.example.backoffice.domain.post.service;
 
+import com.example.backoffice.domain.post.constant.PostConstant;
 import com.example.backoffice.domain.post.dto.CreatePostRequestDto;
 import com.example.backoffice.domain.post.dto.CreatePostResponseDto;
 import com.example.backoffice.domain.post.entity.Post;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.backoffice.domain.post.constant.PostConstant.DEFAULT_LIKE_CNT;
 import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.DEFAULT_POST_LIKE;
 
 @Service
@@ -26,6 +28,7 @@ public class PostService {
         Post savePost = Post.builder()
             .title(createPostRequestDto.getTitle())
             .content(createPostRequestDto.getContent())
+            .postLikeCnt(DEFAULT_LIKE_CNT)
             .user(user)
             .build();
 

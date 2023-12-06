@@ -1,6 +1,7 @@
 package com.example.backoffice.domain.postLike.entity;
 
 import com.example.backoffice.domain.post.entity.Post;
+import com.example.backoffice.domain.postLike.constant.PostLikeConstant;
 import com.example.backoffice.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -16,6 +17,7 @@ public class PostLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Boolean isLiked;
 
     @ManyToOne(fetch = FetchType.LAZY)

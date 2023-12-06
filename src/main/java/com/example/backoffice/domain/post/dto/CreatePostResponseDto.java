@@ -15,27 +15,27 @@ public class CreatePostResponseDto {
     private String content;
     private String username;
     private Long postLikeCnt;
-    private Boolean isHearted;
+    private Boolean isLiked;
     private LocalDateTime createdAt;
 
     @Builder
     private CreatePostResponseDto(String title, String content, String username, Long postLikeCnt,
-                                  Boolean isHearted, LocalDateTime createdAt) {
+                                  Boolean isLiked, LocalDateTime createdAt) {
         this.title = title;
         this.content = content;
         this.username = username;
         this.postLikeCnt = postLikeCnt;
-        this.isHearted = isHearted;
+        this.isLiked = isLiked;
         this.createdAt = createdAt;
     }
 
-    public static CreatePostResponseDto of(Post post, Boolean isHearted) {
+    public static CreatePostResponseDto of(Post post, Boolean isLiked) {
         return CreatePostResponseDto.builder()
             .title(post.getTitle())
             .content(post.getContent())
             .username(post.getUser().getUsername())
             .postLikeCnt(post.getPostLikeCnt())
-            .isHearted(isHearted)
+            .isLiked(isLiked)
             .createdAt(post.getCreatedAt())
             .build();
     }
