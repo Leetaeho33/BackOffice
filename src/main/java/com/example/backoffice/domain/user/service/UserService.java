@@ -6,6 +6,7 @@ import com.example.backoffice.domain.user.UserRepository;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class UserService {
     public void signup(SignUpRequestDTO signUpRequestDTO) {
         user = new User(signUpRequestDTO);
         Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             throw new IllegalArgumentException("중복된 회원이 존재합니다.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -34,13 +35,13 @@ public class UserService {
         String password = loginRequestDTO.getPassword();
         user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
-        if(!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 
     public MypageResponseDTO getMypage(UserDetailsImpl userDetails) {
-        if(userDetails!=null) {
+        if (userDetails != null) {
             user = userDetails.getUser();
         } else {
             throw new NullPointerException("로그인 된 회원이 아닙니다.");
@@ -50,7 +51,7 @@ public class UserService {
 
     @Transactional
     public UpdateUserResponseDTO updateUser(UserDetailsImpl userDetails, UpdateUserRequestDTO updateUserRequestDTO) {
-        if(userDetails!=null) {
+        if (userDetails != null) {
             user = userDetails.getUser();
         } else {
             throw new NullPointerException("로그인 된 회원이 아닙니다.");
@@ -59,5 +60,17 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return new UpdateUserResponseDTO(user);
+    }
+
+    public void checkPwd(UserDetailsImpl userDetails, CheckPwdRequestDTO checkPwdRequestDTO) {
+        String password = checkPwdRequestDTO.getPassword();
+        if (userDetails != null) {
+            user = userDetails.getUser();
+        } else {
+            throw new NullPointerException("로그인 된 회원이 아닙니다.");
+        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
