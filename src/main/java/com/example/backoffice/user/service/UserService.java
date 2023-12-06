@@ -1,6 +1,5 @@
 package com.example.backoffice.user.service;
 
-import com.example.backoffice.global.dto.CommonResponseDTO;
 import com.example.backoffice.user.UserRepository;
 import com.example.backoffice.user.dto.LoginRequestDTO;
 import com.example.backoffice.user.dto.MypageResponseDTO;
@@ -22,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     User user;
 
-    public ResponseEntity<CommonResponseDTO> signup(SignUpRequestDTO signUpRequestDTO) {
+    public void signup(SignUpRequestDTO signUpRequestDTO) {
         user = new User(signUpRequestDTO);
         Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
         if(userOptional.isPresent()){
@@ -30,11 +29,9 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.OK.value()).
-                body(new CommonResponseDTO("회원가입 성공", HttpStatus.OK.value()));
     }
 
-    public ResponseEntity<CommonResponseDTO> login(LoginRequestDTO loginRequestDTO) {
+    public void login(LoginRequestDTO loginRequestDTO) {
         String username = loginRequestDTO.getUsername();
         String password = loginRequestDTO.getPassword();
         user = userRepository.findByUsername(username)
@@ -42,8 +39,6 @@ public class UserService {
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        return ResponseEntity.status(HttpStatus.OK.value()).
-                body(new CommonResponseDTO("로그인 성공", HttpStatus.OK.value()));
     }
 
     public MypageResponseDTO getMypage(UserDetailsImpl userDetails) {

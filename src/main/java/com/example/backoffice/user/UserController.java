@@ -1,6 +1,6 @@
 package com.example.backoffice.user;
 
-import com.example.backoffice.global.dto.CommonResponseDTO;
+import com.example.backoffice.global.common.CommonCode;
 import com.example.backoffice.global.security.JwtUtil;
 import com.example.backoffice.user.dto.LoginRequestDTO;
 import com.example.backoffice.user.dto.MypageResponseDTO;
@@ -23,20 +23,17 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<CommonResponseDTO> signup(@RequestBody SignUpRequestDTO signUpRequestDTO){
-        return userService.signup(signUpRequestDTO);
+    public ResponseEntity<String> signup(@RequestBody SignUpRequestDTO signUpRequestDTO){
+        userService.signup(signUpRequestDTO);
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<CommonResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO,
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO,
                                                    HttpServletResponse response){
-        try {
-            userService.login(loginRequestDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new CommonResponseDTO(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
-        }
+        userService.login(loginRequestDTO);
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDTO.getUsername()));
-        return userService.login(loginRequestDTO);
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
     @GetMapping
