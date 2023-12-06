@@ -35,6 +35,7 @@ public class Post extends BaseTime {
     @NotNull
     private Long postLikeCnt = PostLikeConstant.DEFAULT_LIKE_CNT;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

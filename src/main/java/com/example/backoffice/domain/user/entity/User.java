@@ -1,11 +1,15 @@
 package com.example.backoffice.domain.user.entity;
 
 import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
+
+import com.example.backoffice.domain.user.dto.UpdateUserRequestDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.sql.Update;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -30,11 +34,23 @@ public class User {
     @Column
     private String intro;
 
-    public User (SignUpRequestDTO signUpRequestDTO){
-        this.username = signUpRequestDTO.getUsername();
-        this.password = signUpRequestDTO.getPassword();
-        this.mbti = signUpRequestDTO.getMbti();
-        this.intro = signUpRequestDTO.getIntro();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<PasswordHistory> passwordHistoryList;
+
+    public void updateUser(UpdateUserRequestDTO userRequestDTO){
+        this.intro = userRequestDTO.getIntro();
+        this.mbti = userRequestDTO.getMbti();
+        this.password = userRequestDTO.getPassword();
+    }
+    public void setPassword(String password){
+        this.password = password;
+    }
+    @Builder
+    private User (String username, String password, String mbti, String intro){
+        this.username = username;
+        this.password = password;
+        this.mbti = mbti;
+        this.intro = intro;
     }
 
 }

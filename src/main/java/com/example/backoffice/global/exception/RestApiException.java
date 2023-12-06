@@ -1,6 +1,5 @@
 package com.example.backoffice.global.exception;
 
-import com.example.backoffice.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
