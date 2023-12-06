@@ -3,16 +3,13 @@ package com.example.backoffice.domain.user.entity;
 import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
 import com.example.backoffice.domain.user.dto.UpdateUserRequestDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.sql.Update;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "users")
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -33,15 +30,20 @@ public class User {
     @Column
     private String intro;
 
-    public User (SignUpRequestDTO signUpRequestDTO){
-        this.username = signUpRequestDTO.getUsername();
-        this.password = signUpRequestDTO.getPassword();
-        this.mbti = signUpRequestDTO.getMbti();
-        this.intro = signUpRequestDTO.getIntro();
-    }
+
     public void updateUser(UpdateUserRequestDTO userRequestDTO){
         this.intro = userRequestDTO.getIntro();
         this.mbti = userRequestDTO.getMbti();
         this.password = userRequestDTO.getPassword();
+    }
+    public void setPassword(String password){
+        this.password = password;
+    }
+    @Builder
+    private User (String username, String password, String mbti, String intro){
+        this.username = username;
+        this.password = password;
+        this.mbti = mbti;
+        this.intro = intro;
     }
 }

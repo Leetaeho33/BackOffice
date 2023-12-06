@@ -38,27 +38,27 @@ public class UserController {
 
     @GetMapping
     public MypageResponseDTO mypage(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.getMypage(userDetails);
+        return userService.getMypage(userDetails.getUser());
     }
 
     // 의논 사항 : 응답에 비밀번호를 응답할지? 응답하지 않을지? 지금은 응답하고 있습니다.
     @PatchMapping
     public UpdateUserResponseDTO updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                @RequestBody UpdateUserRequestDTO updateUserRequestDTO){
-        return userService.updateUser(userDetails, updateUserRequestDTO);
+        return userService.updateUser(userDetails.getUser(), updateUserRequestDTO);
     }
 
     @PostMapping("/checkPwd")
     public ResponseEntity<String> checkPwd(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                            @RequestBody CheckPwdRequestDTO checkPwdRequestDTO){
-        userService.checkPwd(userDetails, checkPwdRequestDTO);
+        userService.checkPwd(userDetails.getUser(), checkPwdRequestDTO);
         return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        userService.logout(userDetails);
+        userService.checkLogin(userDetails.getUser());
         session.invalidate();
         return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
