@@ -1,6 +1,7 @@
 package com.example.backoffice.domain.user.entity;
 
 import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
+
 import com.example.backoffice.domain.user.dto.UpdateUserRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.hibernate.sql.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -50,4 +52,5 @@ public class User {
         this.mbti = mbti;
         this.intro = intro;
     }
+
 }

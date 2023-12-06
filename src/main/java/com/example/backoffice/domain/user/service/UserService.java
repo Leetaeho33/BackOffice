@@ -1,5 +1,6 @@
 package com.example.backoffice.domain.user.service;
 
+
 import com.example.backoffice.domain.user.dto.*;
 import com.example.backoffice.domain.user.entity.PasswordHistory;
 import com.example.backoffice.domain.user.entity.User;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+
 // 서비스단에 들어오면 읽기만 한다.
 @Transactional(readOnly = true)
 public class UserService {
@@ -53,7 +55,6 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
-
     public MypageResponseDTO getMypage(User requestsUser) {
         user = checkLogin(requestsUser);
         return new MypageResponseDTO(user);

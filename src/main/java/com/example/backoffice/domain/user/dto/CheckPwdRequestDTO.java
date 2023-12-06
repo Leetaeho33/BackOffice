@@ -1,5 +1,4 @@
 package com.example.backoffice.domain.user.dto;
-
 import lombok.Getter;
 
 @Getter
