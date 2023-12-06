@@ -1,6 +1,6 @@
-package com.example.backoffice.user;
+package com.example.backoffice.domain.user;
 
-import com.example.backoffice.user.entity.User;
+import com.example.backoffice.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

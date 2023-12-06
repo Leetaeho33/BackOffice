@@ -1,6 +1,6 @@
-package com.example.backoffice.user.entity;
+package com.example.backoffice.domain.user.entity;
 
-import com.example.backoffice.user.dto.SignUpRequestDTO;
+import com.example.backoffice.domain.user.dto.SignUpRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

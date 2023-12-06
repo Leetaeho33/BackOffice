@@ -1,10 +1,8 @@
 package com.example.backoffice.global.security;
 
-import com.example.backoffice.global.common.CommonErrorCode;
-import com.example.backoffice.global.exception.advice.GlobalExceptionHandler;
 import com.example.backoffice.global.exception.response.ErrorResponse;
-import com.example.backoffice.user.entity.UserDetailsImpl;
-import com.example.backoffice.user.service.UserDetailsServiceImpl;
+import com.example.backoffice.domain.user.entity.UserDetailsImpl;
+import com.example.backoffice.domain.user.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
