@@ -41,21 +41,13 @@ public class UserService {
     }
 
     public MypageResponseDTO getMypage(UserDetailsImpl userDetails) {
-        if (userDetails != null) {
-            user = userDetails.getUser();
-        } else {
-            throw new NullPointerException("로그인 된 회원이 아닙니다.");
-        }
+        user = checkLogin(userDetails);
         return new MypageResponseDTO(user);
     }
 
     @Transactional
     public UpdateUserResponseDTO updateUser(UserDetailsImpl userDetails, UpdateUserRequestDTO updateUserRequestDTO) {
-        if (userDetails != null) {
-            user = userDetails.getUser();
-        } else {
-            throw new NullPointerException("로그인 된 회원이 아닙니다.");
-        }
+        user = checkLogin(userDetails);
         user.updateUser(updateUserRequestDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -64,13 +56,22 @@ public class UserService {
 
     public void checkPwd(UserDetailsImpl userDetails, CheckPwdRequestDTO checkPwdRequestDTO) {
         String password = checkPwdRequestDTO.getPassword();
+        user = checkLogin(userDetails);
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    public void logout(UserDetailsImpl userDetails) {
+        checkLogin(userDetails);
+    }
+
+    public User checkLogin(UserDetailsImpl userDetails){
         if (userDetails != null) {
             user = userDetails.getUser();
         } else {
             throw new NullPointerException("로그인 된 회원이 아닙니다.");
         }
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        return user;
     }
 }

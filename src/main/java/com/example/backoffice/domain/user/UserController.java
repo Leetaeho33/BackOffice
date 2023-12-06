@@ -7,7 +7,9 @@ import com.example.backoffice.global.common.CommonCode;
 import com.example.backoffice.global.security.JwtUtil;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +52,14 @@ public class UserController {
     public ResponseEntity<String> checkPwd(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                            @RequestBody CheckPwdRequestDTO checkPwdRequestDTO){
         userService.checkPwd(userDetails, checkPwdRequestDTO);
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session,
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
+        userService.logout(userDetails);
+        session.invalidate();
         return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
