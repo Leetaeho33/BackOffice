@@ -33,7 +33,8 @@ public class Post extends BaseTime {
     private String content;
 
     @NotNull
-    private Long likeCnt = PostLikeConstant.DEFAULT_LIKE_CNT;
+    private Long postLikeCnt = PostLikeConstant.DEFAULT_LIKE_CNT;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -46,25 +47,25 @@ public class Post extends BaseTime {
     List<PostLike> postLikeList = new ArrayList<>();
 
     @Builder
-    private Post(Long id, String title, String content, Long likeCnt, User user) {
+    private Post(Long id, String title, String content, Long postLikeCnt, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.likeCnt = likeCnt;
+        this.postLikeCnt = postLikeCnt;
         this.user = user;
     }
 
-    public void updatePost(PostUpdateRequsetDto postUpdateRequsetDto) {
-        this.title = postUpdateRequsetDto.getTitle();
-        this.content = postUpdateRequsetDto.getContent();
+    public void updatePost(PostUpdateRequsetDto postUpdateRequestDto) {
+        this.title = postUpdateRequestDto.getTitle();
+        this.content = postUpdateRequestDto.getContent();
     }
 
     public void updatePostLikeCnt(boolean updatedPostLike) {
         if (updatedPostLike) {
-            this.likeCnt++;
+            this.postLikeCnt++;
             return;
         }
-        this.likeCnt--;
+        this.postLikeCnt--;
     }
 
 }
