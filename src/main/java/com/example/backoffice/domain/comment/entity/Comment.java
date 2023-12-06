@@ -2,6 +2,7 @@ package com.example.backoffice.domain.comment.entity;
 
 import com.example.backoffice.domain.comment.dto.CommentRequestDto;
 import com.example.backoffice.domain.commentLike.entity.Likes;
+import com.example.backoffice.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,10 @@ public class Comment extends Timestamped {
 
     @Column(name = "texts", nullable = false, length = 500)
     private String texts;  // 댓글 내용
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     List<Likes> likesList = new ArrayList<>();  // 댓글에 연결된 좋아요 목록
