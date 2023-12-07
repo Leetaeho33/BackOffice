@@ -1,4 +1,4 @@
-package com.example.backoffice.domain.post.controller;
+package com.example.backoffice.domain.post.entity.controller;
 
 import com.example.backoffice.domain.post.dto.CreatePostRequestDto;
 import com.example.backoffice.domain.post.dto.CreatePostResponseDto;
