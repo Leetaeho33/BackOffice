@@ -1,0 +1,116 @@
+package com.example.backoffice.domain.comment.service;
+
+import com.example.backoffice.domain.comment.dto.CommentRequestDto;
+import com.example.backoffice.domain.comment.dto.CommentResponseDto;
+import com.example.backoffice.domain.comment.entity.Comment;
+import com.example.backoffice.domain.comment.exception.CommentErrorCode;
+import com.example.backoffice.domain.comment.exception.CommentExistsException;
+import com.example.backoffice.domain.comment.repository.CommentRepository;
+import com.example.backoffice.domain.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * 댓글 관련 비즈니스 로직을 처리하는 서비스 클래스
+ */
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+
+    private final CommentRepository commentRepository;
+
+//   댓글 생성 서비스
+//   requestDto 생성할 댓글 정보를 담은 DTO
+//   user 작성자 정보
+//   생성된 댓글 정보를 담은 DTO
+
+    public CommentResponseDto createComment(CommentRequestDto requestDto, User user) {
+        Comment comment = Comment.builder()
+                .texts(requestDto.getTexts())
+                .user(user)
+                .build();
+
+        // DB 저장
+        Comment savedComment = commentRepository.save(comment);
+
+        // Entity -> ResponseDto
+        CommentResponseDto commentResponseDto = new CommentResponseDto(savedComment);
+
+        return commentResponseDto;
+    }
+
+
+//     모든 댓글 조회 서비스 (좋아요 수 기준 내림차순 정렬)
+//     user 현재 로그인한 사용자 정보
+//     조회된 댓글 정보 목록을 담은 DTO 리스트
+
+    public List<CommentResponseDto> getComments(User user) {
+        // DB 조회
+        return commentRepository.findAllByOrderByCommentLikeCountDesc().stream()
+                .map(CommentResponseDto::new)
+                .toList();
+    }
+
+
+//    댓글 업데이트 서비스
+//    commentId 업데이트할 댓글의 식별자
+//    requestDto 업데이트할 댓글 정보를 담은 DTO
+//    user 현재 로그인한 사용자 정보
+//    업데이트된 댓글의 식별자
+
+    @Transactional
+    public Long updateComment(Long commentId, CommentRequestDto requestDto, User user) {
+        Comment comment = findComment(commentId);
+        checkAuthorization(comment, user);
+
+        // 댓글 내용 수정
+        comment.update(requestDto);
+
+        return commentId;
+    }
+
+//     댓글 삭제 서비스
+//     commentId 삭제할 댓글의 식별자
+//     user 현재 로그인한 사용자 정보
+//     삭제된 댓글의 식별자
+
+    public Long deleteComment(Long commentId, User user) {
+        // 해당 댓글이 DB에 존재하는지 확인
+        Comment comment = findComment(commentId);
+        checkAuthorization(comment, user);
+
+        // 댓글 삭제
+        commentRepository.delete(comment);
+
+        return commentId;
+    }
+
+
+//   commentId 조회할 댓글의 식별자
+//   조회된 댓글 엔티티
+
+    public Comment findComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentExistsException(CommentErrorCode.NO_COMMENT));
+    }
+
+//    댓글 작성자 권한 확인 메소드
+//    comment 확인할 댓글 엔티티
+//    user 현재 로그인한 사용자 정보
+//    CommentExistsException 작성자 권한이 없을 경우 발생하는 예외
+
+    private void checkAuthorization(Comment comment, User user) {
+        // Null 체크
+        Objects.requireNonNull(comment, "댓글은 null이 될 수 없습니다.");
+        Objects.requireNonNull(user, "사용자는 null이 될 수 없습니다.");
+
+        // 객체 동등성 비교
+        if (!Objects.equals(comment.getUser().getId(), user.getId())) {
+            throw new CommentExistsException(CommentErrorCode.UNAUTHORIZED_USER);
+        }
+    }
+}
