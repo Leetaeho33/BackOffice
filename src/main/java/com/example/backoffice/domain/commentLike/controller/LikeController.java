@@ -22,7 +22,7 @@ public class LikeController {
     @PatchMapping
     public ResponseEntity<LikeResponseDto> like(@PathVariable Long commentId,
                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        LikeResponseDto likeResponseDto = likeService.switchLike(commentId,userDetails.getUser());
+        LikeResponseDto likeResponseDto = likeService.switchLike(commentId, userDetails.getUser());
         return ResponseEntity.ok(likeResponseDto);
     }
 }

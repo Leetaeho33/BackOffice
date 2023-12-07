@@ -59,7 +59,7 @@ public class PostService {
     }
 
     public List<GetAllPostResponseDto> getPostList(User user) {
-        List<Post> postList = postRepository.findAllByOrOrderByCreatedAtDesc();
+        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
         return postList.stream()
             .map(post -> GetAllPostResponseDto.of(post, getPostLiked(user, post)))
             .collect(Collectors.toList());
