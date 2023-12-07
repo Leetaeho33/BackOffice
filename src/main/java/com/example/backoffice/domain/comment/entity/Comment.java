@@ -3,30 +3,34 @@ package com.example.backoffice.domain.comment.entity;
 import com.example.backoffice.domain.comment.dto.CommentRequestDto;
 import com.example.backoffice.domain.commentLike.entity.Likes;
 import com.example.backoffice.domain.post.entity.Post;
+import com.example.backoffice.domain.utils.BaseTime;
 import com.example.backoffice.domain.user.entity.User;
-
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity // JPA가 관리할 수 있는 Entity 클래스 지정
+
+//엔티티 클래스: 댓글 정보를 나타내는 엔티티
+
+@Entity
+@Table(name = "comment")
 @Getter
-@Setter
-@Table(name = "comment") // 매핑할 테이블의 이름을 지정
 @NoArgsConstructor
-public class Comment extends Timestamped {
+public class Comment extends BaseTime {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;  // 댓글 식별자
+    private Long id;
 
-    private Long commentLikeCount;  // 댓글 좋아요 수
+    private Long commentLikeCount;
 
     @Column(name = "texts", nullable = false, length = 500)
-    private String texts;  // 댓글 내용
+    private String texts;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    List<Likes> likesList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -36,26 +40,38 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    List<Likes> likesList = new ArrayList<>();  // 댓글에 연결된 좋아요 목록
 
-    // 생성자: CommentRequestDto를 통해 댓글을 생성할 때 사용
-    public Comment(CommentRequestDto requestDto) {
+//    엔티티의 빌더 클래스
+//    id 댓글 식별자
+//    texts 댓글 내용
+//    user 작성자 정보
+//    post 댓글이 달린 게시물 정보
+    @Builder
+    private Comment(Long id, String texts, User user, Post post) {
         this.commentLikeCount = 0L;
-        this.texts = requestDto.getTexts();
+        this.id = id;
+        this.texts = texts;
+        this.user = user;
+        this.post = post;
     }
 
-    // 댓글 내용을 갱신하는 메서드
+
+//     댓글 내용을 업데이트하는 메소드
+//     requestDto 댓글 수정 요청 DTO
+
     public void update(CommentRequestDto requestDto) {
         this.texts = requestDto.getTexts();
     }
 
-    // 좋아요 갯수를 갱신하는 메서드
+
+//    댓글 좋아요 수를 업데이트하는 메소드
+//    updated 업데이트 여부를 나타내는 값 (true: 증가, false: 감소)
+
     public void updateLikeCount(Boolean updated) {
         if (updated) {
             this.commentLikeCount++;
-            return;
+        } else {
+            this.commentLikeCount--;
         }
-        this.commentLikeCount--;
     }
 }

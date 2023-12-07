@@ -7,6 +7,7 @@ import com.example.backoffice.domain.commentLike.entity.Likes;
 
 import com.example.backoffice.domain.commentLike.repository.LikeRepository;
 
+import com.example.backoffice.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +27,14 @@ public class LikeService {
 
     // 댓글에 대한 좋아요를 전환
     @Transactional
-    public LikeResponseDto switchLike(Long comment_id) {
+    public LikeResponseDto switchLike(Long commentId, User user) {
 
         // 댓글 서비스를 통해 댓글을 조회
-        Comment comment = commentService.findComment(comment_id);
+        Comment comment = commentService.findComment(commentId);
 
         // 댓글에 대한 좋아요 정보를 찾거나, 없으면 생성하여 가져옴
-        Likes likes = likeRepository.findByComment(comment)
-                .orElseGet(() -> saveCommentLike(comment));
+        Likes likes = likeRepository.findByCommentAndUser(comment,user)
+                .orElseGet(() -> saveCommentLike(comment,user));
 
         // 좋아요 정보를 전환하고, 해당 댓글의 좋아요 수를 갱신
         Boolean updated = likes.updateLike();
@@ -45,11 +46,12 @@ public class LikeService {
 
     // 댓글에 대한 좋아요 정보를 저장
     @Transactional
-    public Likes saveCommentLike(Comment comment) {
+    public Likes saveCommentLike(Comment comment, User user) {
 
         // 댓글 정보를 기반으로 좋아요 엔티티를 생성
         Likes likes = Likes.builder()
                 .comment(comment)
+                .user(user)
                 .build();
 
         // 생성된 좋아요 엔티티를 저장하고 반환

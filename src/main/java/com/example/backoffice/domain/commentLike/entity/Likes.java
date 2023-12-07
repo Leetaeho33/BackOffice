@@ -5,6 +5,7 @@
 package com.example.backoffice.domain.commentLike.entity;
 
 import com.example.backoffice.domain.comment.entity.Comment;
+import com.example.backoffice.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,16 +28,20 @@ public class Likes {
     @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Builder
-    private Likes(Long id, Comment comment, Boolean isLiked) {
+    private Likes(Long id, Comment comment, User user) {
         this.id = id;
         this.comment = comment;
         this.isLiked = false;
+        this.user=user;
     }
 
     // 좋아요 상태를 업데이트
     public Boolean updateLike () {
-        this.isLiked = !isLiked;
-        return this.isLiked;
+        return this.isLiked = !isLiked;
     }
 }

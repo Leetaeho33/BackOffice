@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentResponseDto {
     private Long id;                     // 댓글 ID
-    private Long comment_like_count;     // 댓글 좋아요 수
+    private Long commentLikeCount;     // 댓글 좋아요 수
     private String contents;             // 댓글 내용
     private LocalDateTime createdAt;    // 댓글 생성일시
     private LocalDateTime modifiedAt;   // 댓글 수정일시
 
     // Comment 엔티티를 기반으로 하는 CommentResponseDto 생성자
     public CommentResponseDto(Comment comment) {
-        this.id = comment.getComment_id();
-        this.comment_like_count = comment.getCommentLikeCount();
+        this.id = comment.getId();
+        this.commentLikeCount = comment.getCommentLikeCount();
         this.contents = comment.getTexts();
         this.createdAt = comment.getCreatedAt();
         this.modifiedAt = comment.getModifiedAt();
