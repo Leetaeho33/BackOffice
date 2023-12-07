@@ -1,8 +1,8 @@
 package com.example.backoffice.domain.post.service;
 
-import com.example.backoffice.domain.post.constant.PostConstant;
-import com.example.backoffice.domain.post.dto.CreatePostRequestDto;
-import com.example.backoffice.domain.post.dto.CreatePostResponseDto;
+import com.example.backoffice.domain.comment.dto.CommentResponseDto;
+import com.example.backoffice.domain.comment.entity.Comment;
+import com.example.backoffice.domain.post.dto.*;
 import com.example.backoffice.domain.post.entity.Post;
 import com.example.backoffice.domain.post.exception.PostErrorCode;
 import com.example.backoffice.domain.post.exception.PostExistException;
@@ -12,6 +12,9 @@ import com.example.backoffice.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.backoffice.domain.post.constant.PostConstant.DEFAULT_LIKE_CNT;
 import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.DEFAULT_POST_LIKE;
@@ -37,6 +40,41 @@ public class PostService {
         return CreatePostResponseDto.of(savePost, getPostLiked(user, savePost));
     }
 
+    @Transactional
+    public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto requestDto, User user) {
+        Post post = findById(postId);
+        findByIdUsername(post, user.getUsername());
+        post.updatePost(requestDto);
+
+        return UpdatePostResponseDto.of(post, getPostLiked(user, post));
+    }
+
+    public SelectPostResponseDto getPost(Long postId, User user) {
+        Post post = findById(postId);
+        Boolean isPostLiked = getPostLiked(user, post);
+        List<CommentResponseDto> commentResponseDtoList = commentList(post);
+
+        return SelectPostResponseDto.of(post, isPostLiked, commentResponseDtoList);
+    }
+
+
+
+
+
+
+
+
+    private List<CommentResponseDto> commentList(Post post) {
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        List<Comment> commentList = post.getCommentList();
+        commentList.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
+        for (Comment comment : commentList) {
+            commentResponseDtoList.add(
+                new CommentResponseDto(comment));
+        }
+        return commentResponseDtoList;
+    }
+
     private Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(
             () -> new PostExistException(PostErrorCode.NO_POST));
@@ -47,7 +85,13 @@ public class PostService {
             .stream()
             .filter(postLike -> postLike.getUser().getId().equals(user.getId()))
             .findFirst()
-            .map(PostLike::getIsLiked)
+            .map(PostLike::getIsPostLiked)
             .orElse(DEFAULT_POST_LIKE);
+    }
+
+    private void findByIdUsername(Post post, String username) {
+        if (!post.getUser().getUsername().equals(username)) {
+            throw new PostExistException(PostErrorCode.NO_AUTHORITY);
+        }
     }
 }
