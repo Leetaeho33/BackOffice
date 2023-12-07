@@ -12,33 +12,33 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SelectPostResponseDto {
+public class GetPostResponseDto {
 
     private String title;
     private String content;
-    private String username;
+    private String mbti;
     private Long postLikeCnt;
     private Boolean isPostLiked;
     private LocalDateTime createdAt;
     private List<CommentResponseDto> commentList;
 
     @Builder
-    private SelectPostResponseDto(String title, String content, String username, Long postLikeCnt, Boolean isPostLiked,
-                                  LocalDateTime createdAt, List<CommentResponseDto> commentList) {
+    private GetPostResponseDto(String title, String content, String mbti, Long postLikeCnt, Boolean isPostLiked,
+                               LocalDateTime createdAt, List<CommentResponseDto> commentList) {
         this.title = title;
         this.content = content;
-        this.username = username;
+        this.mbti = mbti;
         this.postLikeCnt = postLikeCnt;
         this.isPostLiked = isPostLiked;
         this.createdAt = createdAt;
         this.commentList = commentList;
     }
 
-    public static SelectPostResponseDto of(Post post, Boolean isPostLiked, List<CommentResponseDto> responseDtos) {
-        return SelectPostResponseDto.builder()
+    public static GetPostResponseDto of(Post post, Boolean isPostLiked, List<CommentResponseDto> responseDtos) {
+        return GetPostResponseDto.builder()
             .title(post.getTitle())
             .content(post.getContent())
-            .username(post.getUser().getUsername())
+            .mbti(post.getUser().getMbti())
             .postLikeCnt(post.getPostLikeCnt())
             .isPostLiked(isPostLiked)
             .createdAt(post.getCreatedAt())

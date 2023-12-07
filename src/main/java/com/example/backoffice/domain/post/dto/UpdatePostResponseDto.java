@@ -14,17 +14,17 @@ public class UpdatePostResponseDto {
 
     private String title;
     private String content;
-    private String username;
+    private String mbti;
     private Long postLikeCnt;
     private Boolean isLiked;
     private LocalDateTime createdAt;
 
     @Builder
-    private UpdatePostResponseDto(String title, String content, String username,
+    private UpdatePostResponseDto(String title, String content, String mbti,
                                   Long postLikeCnt, Boolean isLiked, LocalDateTime createdAt) {
         this.title = title;
         this.content = content;
-        this.username = username;
+        this.mbti = mbti;
         this.postLikeCnt = postLikeCnt;
         this.isLiked = isLiked;
         this.createdAt = createdAt;
@@ -34,7 +34,7 @@ public class UpdatePostResponseDto {
         return UpdatePostResponseDto.builder()
             .title(post.getTitle())
             .content(post.getContent())
-            .username(post.getUser().getUsername())
+            .mbti(post.getUser().getMbti())
             .postLikeCnt(post.getPostLikeCnt())
             .isLiked(isLiked)
             .createdAt(post.getCreatedAt())
