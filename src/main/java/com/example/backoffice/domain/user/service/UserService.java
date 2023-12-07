@@ -4,6 +4,10 @@ package com.example.backoffice.domain.user.service;
 import com.example.backoffice.domain.user.dto.*;
 import com.example.backoffice.domain.user.entity.PasswordHistory;
 import com.example.backoffice.domain.user.entity.User;
+import com.example.backoffice.domain.user.exception.AlreadyExistUserException;
+import com.example.backoffice.domain.user.exception.NonUserExsistException;
+import com.example.backoffice.domain.user.exception.PasswordIsNotMatchException;
+import com.example.backoffice.domain.user.exception.RecentlySetPasswordException;
 import com.example.backoffice.domain.user.repository.PasswordHistoryRepository;
 import com.example.backoffice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.backoffice.domain.user.exception.UserErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +40,7 @@ public class UserService {
 
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
-            throw new IllegalArgumentException("중복된 회원이 존재합니다.");
+            throw new AlreadyExistUserException(ALREADY_EXSIST_USER);
         }
         User user = User.builder().username(username).password(password)
                 .mbti(mbti).intro(intro).build();
@@ -50,9 +56,9 @@ public class UserService {
         String username = loginRequestDTO.getUsername();
         String password = loginRequestDTO.getPassword();
         user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
+                .orElseThrow(() -> new NonUserExsistException(NON_USER_EXSIST));
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PasswordIsNotMatchException(PASSWORD_IS_NOT_MATCH);
         }
     }
     public MypageResponseDTO getMypage(User requestsUser) {
@@ -60,12 +66,12 @@ public class UserService {
         return new MypageResponseDTO(user);
     }
 
+    // 변경사항 : update시 repository에서 save 했던 코드 삭제
     @Transactional
     public UpdateUserResponseDTO updateUser(User requestsUser, UpdateUserRequestDTO updateUserRequestDTO) {
         user = checkLogin(requestsUser);
         user.updateUser(updateUserRequestDTO);
         updatePassword(user, updateUserRequestDTO);
-        userRepository.save(user);
         return new UpdateUserResponseDTO(user);
     }
 
@@ -73,13 +79,13 @@ public class UserService {
         String password = checkPwdRequestDTO.getPassword();
         user = checkLogin(requestsUser);
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PasswordIsNotMatchException(PASSWORD_IS_NOT_MATCH);
         }
     }
 
     public User checkLogin(User user){
         if (user == null) {
-            throw new NullPointerException("로그인 된 회원이 아닙니다.");
+            throw new NonUserExsistException(NON_LOGIN_USER);
         }
         return user;
     }
@@ -95,7 +101,7 @@ public class UserService {
             for(int i = 0;i<passwordHistoryList.size();i++){
                 if(passwordEncoder.matches(updateUserRequestDTO.getPassword(),
                         passwordHistoryList.get(i).getPassword())){
-                    throw new IllegalArgumentException("최근 3번안에 사용한 비밀번호는 사용할 수 없도록 제한합니다.");
+                    throw new RecentlySetPasswordException(RECNTLY_SET_PASSWORD);
                 }
             }
             passwordHistoryRepository.save(passwordHistory);
