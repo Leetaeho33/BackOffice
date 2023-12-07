@@ -24,6 +24,7 @@ public class Comment extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private Long commentLikeCount;
 
     @Column(name = "texts", nullable = false, length = 500)
@@ -41,7 +42,7 @@ public class Comment extends BaseTime {
     private Post post;
 
 
-//    엔티티의 빌더 클래스
+    //    엔티티의 빌더 클래스
 //    id 댓글 식별자
 //    texts 댓글 내용
 //    user 작성자 정보
@@ -60,7 +61,7 @@ public class Comment extends BaseTime {
 //     requestDto 댓글 수정 요청 DTO
 
     public void update(CommentRequestDto requestDto) {
-        this.texts = requestDto.getTexts();
+        this.texts = "(수정됨)"+requestDto.getTexts();
     }
 
 
