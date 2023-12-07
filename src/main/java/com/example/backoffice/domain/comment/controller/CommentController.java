@@ -17,7 +17,7 @@ import java.util.List;
 // 컨트롤러: 댓글 관련 API를 처리하는 컨트롤러 클래스
 
 @RestController
-@RequestMapping("/api/api/posts/{postId}/comments")
+@RequestMapping("/api/posts/{postId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
