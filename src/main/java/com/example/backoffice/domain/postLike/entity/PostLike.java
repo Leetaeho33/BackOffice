@@ -1,7 +1,6 @@
 package com.example.backoffice.domain.postLike.entity;
 
 import com.example.backoffice.domain.post.entity.Post;
-import com.example.backoffice.domain.postLike.constant.PostLikeConstant;
 import com.example.backoffice.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -18,7 +17,7 @@ public class PostLike {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean isLiked;
+    private Boolean isPostLiked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -29,15 +28,15 @@ public class PostLike {
     private Post post;
 
     @Builder
-    private PostLike(Long id, Boolean isLiked, User user, Post post) {
+    private PostLike(Long id, Boolean isPostLiked, User user, Post post) {
         this.id = id;
-        this.isLiked = isLiked;
+        this.isPostLiked = isPostLiked;
         this.user = user;
         this.post = post;
     }
 
     public Boolean pressLike() {
-        this.isLiked = !isLiked;
-        return this.isLiked;
+        this.isPostLiked = !isPostLiked;
+        return this.isPostLiked;
     }
 }
