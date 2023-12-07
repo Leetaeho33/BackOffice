@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.backoffice.domain.post.constant.PostConstant.DEFAULT_LIKE_CNT;
 import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.DEFAULT_POST_LIKE;
@@ -49,14 +50,20 @@ public class PostService {
         return UpdatePostResponseDto.of(post, getPostLiked(user, post));
     }
 
-    public SelectPostResponseDto getPost(Long postId, User user) {
+    public GetPostResponseDto getPost(Long postId, User user) {
         Post post = findById(postId);
         Boolean isPostLiked = getPostLiked(user, post);
         List<CommentResponseDto> commentResponseDtoList = commentList(post);
 
-        return SelectPostResponseDto.of(post, isPostLiked, commentResponseDtoList);
+        return GetPostResponseDto.of(post, isPostLiked, commentResponseDtoList);
     }
 
+    public List<GetAllPostResponseDto> getPostList(User user) {
+        List<Post> postList = postRepository.findAllByOrOrderByCreatedAtDesc();
+        return postList.stream()
+            .map(post -> GetAllPostResponseDto.of(post, getPostLiked(user, post)))
+            .collect(Collectors.toList());
+    }
 
 
 
