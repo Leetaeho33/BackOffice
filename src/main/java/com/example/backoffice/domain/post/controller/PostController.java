@@ -40,7 +40,7 @@ public class PostController {
 
     @GetMapping("/mbti")
     public ResponseEntity<List<GetAllPostResponseDto>> getMbtiPostList(@RequestParam String mbti,
-                                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<GetAllPostResponseDto> responseDtos = postService.getMbtiPostList(mbti, userDetails.getUser());
         return ResponseEntity.ok(responseDtos);
     }
@@ -51,5 +51,11 @@ public class PostController {
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UpdatePostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @DeleteMapping("/{postId}")
+    public void deletePost(@PathVariable Long postId,
+                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(postId, userDetails.getUser());
     }
 }

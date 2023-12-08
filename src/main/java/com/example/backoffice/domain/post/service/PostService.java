@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.backoffice.domain.post.constant.PostConstant.DEFAULT_LIKE_CNT;
@@ -69,15 +71,22 @@ public class PostService {
     }
 
     public List<GetAllPostResponseDto> getMbtiPostList(String mbti, User user) {
-        List<Post> mbtiPostList = mbtiPostRepository.findAllByMbti(mbti);
-        return mbtiPostList.stream()
-            .map(post ->  GetAllPostResponseDto.of(post, getPostLiked(user, post)))
+        String[] mbtiSplit = mbti.split(""); // mbti = it => {"I", "T"}
+        Set<Post> mbtiPostSet = new HashSet<>();
+        for (int i = 0; i < mbtiSplit.length; i++) {
+            mbtiPostSet.addAll(mbtiPostRepository.findAllByMbti(mbtiSplit[i]));
+        }
+        return mbtiPostSet.stream()
+            .map(post -> GetAllPostResponseDto.of(post, getPostLiked(user, post)))
             .collect(Collectors.toList());
     }
 
-
-
-
+    @Transactional
+    public void deletePost(Long postId, User user) {
+        Post post = findById(postId);
+        findByIdUsername(post, user);
+        postRepository.delete(post);
+    }
 
     private List<CommentResponseDto> commentList(Post post) {
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
@@ -105,9 +114,8 @@ public class PostService {
     }
 
     private void findByIdUsername(Post post, User user) {
-        if (!post.getUser().getUsername().equals(user.getUsername())&&user.getRole().equals(UserRoleEnum.USER)) {
+        if (!post.getUser().getUsername().equals(user.getUsername()) && user.getRole().equals(UserRoleEnum.USER)) {
             throw new PostExistException(PostErrorCode.NO_AUTHORITY);
         }
     }
-
 }
