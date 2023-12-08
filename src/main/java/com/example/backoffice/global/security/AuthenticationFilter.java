@@ -57,6 +57,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json; charset=UTF-8");
                 response.getWriter().write(objectMapper.writeValueAsString(commonResponseDTO));
+                return;
             }
         }
         filterChain.doFilter(request, response);
