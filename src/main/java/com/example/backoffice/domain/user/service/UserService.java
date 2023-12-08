@@ -96,9 +96,14 @@ public class UserService {
         return new MypageResponseDTO(user);
     }
 
-    public MypageResponseDTO getUserPage(Long userId,User requestsUser) {
+    public MypageResponseDTO getUserPage(Long userId, User requestsUser) {
+        // 사용자의 역할 확인
         checkUserRole(requestsUser);
+
+        // 특정 사용자 식별자로 사용자 조회
         user = findById(userId);
+
+        // 조회된 사용자 정보를 MypageResponseDTO로 변환하여 반환
         return new MypageResponseDTO(user);
     }
 
@@ -150,14 +155,21 @@ public class UserService {
         }
     }
 
+    // 특정 사용자 식별자로 사용자를 조회하는 메소드.
+    //userId 사용자 식별자
+    //NonUserExsistException 사용자가 존재하지 않을 경우 발생하는 예외
     private User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NonUserExsistException(UserErrorCode.NON_USERPAGE));
     }
 
+    //사용자의 역할을 확인하여 특정 권한이 없으면 예외를 발생시키는 메소드.
+    //user 확인할 사용자 객체
+    //PostExistException 권한이 없을 경우 발생하는 예외\
     private void checkUserRole(User user) {
         if (user.getRole().equals(UserRoleEnum.USER)) {
             throw new PostExistException(PostErrorCode.NO_AUTHORITY);
         }
     }
+
 }

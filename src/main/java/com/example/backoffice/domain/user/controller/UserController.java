@@ -44,7 +44,7 @@ public class UserController {
         return userService.getMypage(userDetails.getUser());
     }
 
-    //관리자용 원하는 유저의 프로필 확인
+    //관리자용 원하는 유저의 마이페이지 확인
     @GetMapping("/{userId}")
     public ResponseEntity<MypageResponseDTO> getUserPage (@PathVariable Long userId,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
