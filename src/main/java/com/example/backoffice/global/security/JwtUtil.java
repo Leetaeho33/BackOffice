@@ -1,5 +1,6 @@
 package com.example.backoffice.global.security;
 
+import com.example.backoffice.domain.user.exception.NonUserExsistException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -14,18 +15,22 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+import static com.example.backoffice.domain.user.exception.UserErrorCode.NON_USER_EXSIST;
+
 @Slf4j
 @Component
 public class JwtUtil {
 
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String REFRESH_AUTHORIZATION_HEADER = "Refresh_Auth";
 
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String REFRESH_PREFIX = "Refresh ";
 
-//    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
-    private String secretKey = "1a1b95adsfadf36d65432b16d4ded7f2814c8e5105ceae7ced4e173b086c564f2efa609d03c8ab84a78492f3175c0ce8ef792d6e55157f34777628f6f55163ef115bfe4";
+    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
+    private String secretKey;
 
     // secret key 암호화 알고리즘
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -70,7 +75,7 @@ public class JwtUtil {
 
     // 토큰에서 유저 정보를 뽑아오기. 유저정보는 claims에 들어있으므로 claim를 반환
     public Claims getUserInfoFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
     // jwt 토큰을 만드는 메서드.
