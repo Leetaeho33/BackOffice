@@ -74,11 +74,7 @@ public class JwtUtil {
 
     // 토큰에서 유저 정보를 뽑아오기. 유저정보는 claims에 들어있으므로 claim를 반환
     public Claims getUserInfoFromToken(String token) {
-        try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        } catch (NullPointerException e){
-            throw new NonUserExsistException(NON_USER_EXSIST);
-        }
     }
 
     // jwt 토큰을 만드는 메서드.
