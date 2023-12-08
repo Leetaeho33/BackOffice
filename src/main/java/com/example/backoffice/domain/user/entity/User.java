@@ -31,6 +31,11 @@ public class User {
     @Column
     private String mbti;
 
+    @Column(nullable = false)// null 값이 허용되지 않음
+    @Enumerated(value = EnumType.STRING)//Enum 상수를 문자열로 저장
+    private UserRoleEnum role; // 사용자 역할(UserRoleEnum)
+
+
     @Column
     private String intro;
 
@@ -46,11 +51,12 @@ public class User {
         this.password = password;
     }
     @Builder
-    private User (String username, String password, String mbti, String intro){
+    private User (String username, String password, String mbti, String intro, UserRoleEnum role){
         this.username = username;
         this.password = password;
         this.mbti = mbti;
         this.intro = intro;
+        this.role = role;
     }
 
 }
