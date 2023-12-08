@@ -1,6 +1,5 @@
 package com.example.backoffice.domain.user.entity;
 
-import com.example.backoffice.domain.comment.entity.Timestamped;
 import com.example.backoffice.domain.utils.BaseTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
