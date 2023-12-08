@@ -115,7 +115,7 @@ public class CommentService {
 
 
         // 객체 동등성 비교
-        if (!Objects.equals(comment.getUser().getId(),user.getRole().equals(UserRoleEnum.USER))) {
+        if (!Objects.equals(comment.getUser().getId(), user.getId())&&user.getRole().equals(UserRoleEnum.USER)) {
             throw new CommentExistsException(CommentErrorCode.UNAUTHORIZED_USER);
         }
     }
