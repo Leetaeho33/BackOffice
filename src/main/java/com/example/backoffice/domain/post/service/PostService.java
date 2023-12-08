@@ -9,6 +9,7 @@ import com.example.backoffice.domain.post.exception.PostExistException;
 import com.example.backoffice.domain.post.repository.PostRepository;
 import com.example.backoffice.domain.postLike.entity.PostLike;
 import com.example.backoffice.domain.user.entity.User;
+import com.example.backoffice.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,7 @@ public class PostService {
     @Transactional
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto requestDto, User user) {
         Post post = findById(postId);
-        findByIdUsername(post, user.getUsername());
+        findByIdUsername(post, user);
         post.updatePost(requestDto);
 
         return UpdatePostResponseDto.of(post, getPostLiked(user, post));
@@ -96,8 +97,8 @@ public class PostService {
             .orElse(DEFAULT_POST_LIKE);
     }
 
-    private void findByIdUsername(Post post, String username) {
-        if (!post.getUser().getUsername().equals(username)) {
+    private void findByIdUsername(Post post, User user) {
+        if (!post.getUser().getUsername().equals(user.getUsername())&&user.getRole().equals(UserRoleEnum.USER)) {
             throw new PostExistException(PostErrorCode.NO_AUTHORITY);
         }
     }
