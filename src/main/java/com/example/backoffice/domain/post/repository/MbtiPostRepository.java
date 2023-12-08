@@ -7,5 +7,6 @@ import java.util.List;
 
 @Repository
 public interface MbtiPostRepository {
+
     List<Post> findAllByMbti(String mbti);
 }
