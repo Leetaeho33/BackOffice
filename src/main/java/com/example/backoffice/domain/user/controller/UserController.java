@@ -1,19 +1,21 @@
 package com.example.backoffice.domain.user.controller;
 
 
+import com.example.backoffice.domain.comment.dto.CommentResponseDto;
+import com.example.backoffice.domain.post.dto.GetPostResponseDto;
 import com.example.backoffice.domain.user.dto.*;
-import com.example.backoffice.domain.user.entity.User;
+import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import com.example.backoffice.domain.user.service.UserService;
 import com.example.backoffice.global.common.CommonCode;
 import com.example.backoffice.global.security.JwtUtil;
-import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -40,6 +42,14 @@ public class UserController {
     @GetMapping
     public MypageResponseDTO mypage(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.getMypage(userDetails.getUser());
+    }
+
+    //관리자용 원하는 유저의 프로필 확인
+    @GetMapping("/{userId}")
+    public ResponseEntity<MypageResponseDTO> getUserPage (@PathVariable Long userId,
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        MypageResponseDTO responseDto = userService.getUserPage(userId,userDetails.getUser());
+        return ResponseEntity.ok(responseDto);
     }
 
     // 의논 사항 : 응답에 비밀번호를 응답할지? 응답하지 않을지? 지금은 응답하고 있습니다.

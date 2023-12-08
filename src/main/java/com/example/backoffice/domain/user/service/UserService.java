@@ -1,14 +1,16 @@
 package com.example.backoffice.domain.user.service;
 
 
+import com.example.backoffice.domain.comment.dto.CommentResponseDto;
+import com.example.backoffice.domain.post.dto.GetPostResponseDto;
+import com.example.backoffice.domain.post.entity.Post;
+import com.example.backoffice.domain.post.exception.PostErrorCode;
+import com.example.backoffice.domain.post.exception.PostExistException;
 import com.example.backoffice.domain.user.dto.*;
 import com.example.backoffice.domain.user.entity.PasswordHistory;
 import com.example.backoffice.domain.user.entity.User;
 import com.example.backoffice.domain.user.entity.UserRoleEnum;
-import com.example.backoffice.domain.user.exception.AlreadyExistUserException;
-import com.example.backoffice.domain.user.exception.NonUserExsistException;
-import com.example.backoffice.domain.user.exception.PasswordIsNotMatchException;
-import com.example.backoffice.domain.user.exception.RecentlySetPasswordException;
+import com.example.backoffice.domain.user.exception.*;
 import com.example.backoffice.domain.user.repository.PasswordHistoryRepository;
 import com.example.backoffice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN
-    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final String ADMIN_TOKEN = "12345";
 
     User user;
 
@@ -94,6 +96,13 @@ public class UserService {
         return new MypageResponseDTO(user);
     }
 
+    public MypageResponseDTO getUserPage(Long userId,User requestsUser) {
+        checkUserRole(requestsUser);
+        user = findById(userId);
+        return new MypageResponseDTO(user);
+    }
+
+
     // 변경사항 : update시 repository에서 save 했던 코드 삭제
     @Transactional
     public UpdateUserResponseDTO updateUser(User requestsUser, UpdateUserRequestDTO updateUserRequestDTO) {
@@ -138,6 +147,17 @@ public class UserService {
                 passwordHistoryRepository.delete(lastPasswordHistory);
                 user.setPassword(passwordEncoder.encode(updateUserRequestDTO.getPassword()));
             }
+        }
+    }
+
+    private User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NonUserExsistException(UserErrorCode.NON_USERPAGE));
+    }
+
+    private void checkUserRole(User user) {
+        if (user.getRole().equals(UserRoleEnum.USER)) {
+            throw new PostExistException(PostErrorCode.NO_AUTHORITY);
         }
     }
 }
