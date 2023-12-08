@@ -27,9 +27,10 @@ public class JwtUtil {
 
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String REFRESH_PREFIX = "Refresh ";
 
-//    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
-    private String secretKey = "1a1b95adsfadf36d65432b16d4ded7f2814c8e5105ceae7ced4e173b086c564f2efa609d03c8ab84a78492f3175c0ce8ef792d6e55157f34777628f6f55163ef115bfe4";
+    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
+    private String secretKey;
 
     // secret key 암호화 알고리즘
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
