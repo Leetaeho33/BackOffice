@@ -38,6 +38,13 @@ public class PostController {
         return ResponseEntity.ok(responseDtos);
     }
 
+    @GetMapping("/mbti")
+    public ResponseEntity<List<GetAllPostResponseDto>> getMbtiPostList(@RequestParam String mbti,
+                                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<GetAllPostResponseDto> responseDtos = postService.getMbtiPostList(mbti, userDetails.getUser());
+        return ResponseEntity.ok(responseDtos);
+    }
+
     @PatchMapping("/{postId}")
     public ResponseEntity<UpdatePostResponseDto> updatePost(@PathVariable Long postId,
                                                             @RequestBody UpdatePostRequestDto requestDto,
