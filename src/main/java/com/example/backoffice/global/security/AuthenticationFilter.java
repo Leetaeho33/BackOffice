@@ -57,7 +57,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json; charset=UTF-8");
                 response.getWriter().write(objectMapper.writeValueAsString(commonResponseDTO));
+                return;
             }
+        }else {
+            // 인증정보가 존재하지 않을때
+            CommonResponseDTO commonResponseDTO = new CommonResponseDTO("토큰이 유효하지 않습니다.", HttpStatus.FORBIDDEN.value());
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json; charset=UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(commonResponseDTO));
+            return;
         }
         filterChain.doFilter(request, response);
     }
