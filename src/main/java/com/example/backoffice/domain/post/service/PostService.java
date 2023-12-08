@@ -6,6 +6,7 @@ import com.example.backoffice.domain.post.dto.*;
 import com.example.backoffice.domain.post.entity.Post;
 import com.example.backoffice.domain.post.exception.PostErrorCode;
 import com.example.backoffice.domain.post.exception.PostExistException;
+import com.example.backoffice.domain.post.repository.MbtiPostRepository;
 import com.example.backoffice.domain.post.repository.PostRepository;
 import com.example.backoffice.domain.postLike.entity.PostLike;
 import com.example.backoffice.domain.user.entity.User;
@@ -27,6 +28,7 @@ import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.D
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MbtiPostRepository mbtiPostRepository;
 
     @Transactional
     public CreatePostResponseDto createPost(CreatePostRequestDto createPostRequestDto, User user) {
@@ -66,7 +68,12 @@ public class PostService {
             .collect(Collectors.toList());
     }
 
-
+    public List<GetAllPostResponseDto> getMbtiPostList(String mbti, User user) {
+        List<Post> mbtiPostList = mbtiPostRepository.findAllByMbti(mbti);
+        return mbtiPostList.stream()
+            .map(post ->  GetAllPostResponseDto.of(post, getPostLiked(user, post)))
+            .collect(Collectors.toList());
+    }
 
 
 
@@ -102,4 +109,5 @@ public class PostService {
             throw new PostExistException(PostErrorCode.NO_AUTHORITY);
         }
     }
+
 }
