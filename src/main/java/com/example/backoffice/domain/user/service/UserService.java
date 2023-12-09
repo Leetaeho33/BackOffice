@@ -10,6 +10,7 @@ import com.example.backoffice.domain.user.exception.PasswordIsNotMatchException;
 import com.example.backoffice.domain.user.exception.RecentlySetPasswordException;
 import com.example.backoffice.domain.user.repository.PasswordHistoryRepository;
 import com.example.backoffice.domain.user.repository.UserRepository;
+import com.example.backoffice.global.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordHistoryRepository passwordHistoryRepository;
     private final PasswordEncoder passwordEncoder;
+//    private final RedisUtil redisUtil;
+    private final JwtUtil jwtUtil;
     User user;
+
 
     @Transactional
     public void signup(SignUpRequestDTO signUpRequestDTO) {
@@ -60,6 +64,9 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new PasswordIsNotMatchException(PASSWORD_IS_NOT_MATCH);
         }
+//        String refreshToken = jwtUtil.createRefreshToken();
+//        refreshToken = refreshToken.split(" ")[1].trim();
+//        redisUtil.set(refreshToken, user.getId(), 60 * 24 * 14);
     }
     public MypageResponseDTO getMypage(User requestsUser) {
         user = checkLogin(requestsUser);
