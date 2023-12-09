@@ -45,4 +45,13 @@ public class GetPostResponseDto {
             .commentList(responseDtos)
             .build();
     }
+
+    public GetPostResponseDto(Post post) {
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.mbti = post.getUser().getMbti();
+        this.postLikeCnt = post.getPostLikeCnt();
+        this.createdAt = post.getCreatedAt();
+//        this.commentList = post.getCommentList();
+    }
 }
