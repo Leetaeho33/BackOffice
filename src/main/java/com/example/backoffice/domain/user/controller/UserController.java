@@ -8,10 +8,12 @@ import com.example.backoffice.domain.user.dto.*;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import com.example.backoffice.domain.user.service.UserService;
 import com.example.backoffice.global.common.CommonCode;
+import com.example.backoffice.global.common.CommonResponseDTO;
 import com.example.backoffice.global.security.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -29,17 +31,19 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Validated @RequestBody SignUpRequestDTO signUpRequestDTO){
+    public ResponseEntity<CommonResponseDTO> signup(@Validated @RequestBody SignUpRequestDTO signUpRequestDTO){
         userService.signup(signUpRequestDTO);
-        return ResponseEntity.ok(CommonCode.OK.getMessage());
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(new CommonResponseDTO("회원가입 성공", HttpStatus.OK.value()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Validated @RequestBody LoginRequestDTO loginRequestDTO,
+    public ResponseEntity<CommonResponseDTO> login(@Validated @RequestBody LoginRequestDTO loginRequestDTO,
                                                    HttpServletResponse response){
         userService.login(loginRequestDTO);
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDTO.getUsername()));
-        return ResponseEntity.ok(CommonCode.OK.getMessage());
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(new CommonResponseDTO("로그인 성공", HttpStatus.OK.value()));
     }
 
     @GetMapping
@@ -57,10 +61,11 @@ public class UserController {
     }
 
     @PostMapping("/checkPwd")
-    public ResponseEntity<String> checkPwd(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<CommonResponseDTO> checkPwd(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                            @Validated @RequestBody CheckPwdRequestDTO checkPwdRequestDTO){
         userService.checkPwd(userDetails.getUser(), checkPwdRequestDTO);
-        return ResponseEntity.ok(CommonCode.OK.getMessage());
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(new CommonResponseDTO("비밀번호 확인 완료, 회원 정보 수정 페이지로", HttpStatus.OK.value()));
     }
 
     @PostMapping("/logout")
