@@ -7,6 +7,8 @@ import com.example.backoffice.domain.post.entity.Post;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
 import com.example.backoffice.global.common.CommonCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,11 +32,12 @@ public class CommentController {
 //    HTTP 응답: 성공 시 메시지
 
     @PostMapping
-    public ResponseEntity<String> createComment(@PathVariable Long postId,
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId,
                                                 @RequestBody CommentRequestDto requestDto,
                                                 @AuthenticationPrincipal UserDetailsImpl userDetail) {
         commentService.createComment(postId,requestDto, userDetail.getUser());
-        return ResponseEntity.ok(CommonCode.OK.getMessage());
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(commentService.createComment(postId,requestDto, userDetail.getUser()));
     }
 
 
@@ -54,12 +57,13 @@ public class CommentController {
 //     HTTP 응답: 성공 시 메시지
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<String> updateComment(@PathVariable Long postId,
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long postId,
                                                 @PathVariable Long commentId,
                                                 @RequestBody CommentRequestDto requestDto,
                                                 @AuthenticationPrincipal UserDetailsImpl userDetail) {
         commentService.updateComment(postId,commentId, requestDto, userDetail.getUser());
-        return ResponseEntity.ok(CommonCode.OK.getMessage());
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(commentService.createComment(postId,requestDto, userDetail.getUser()));
     }
 
     //     댓글 삭제 API
