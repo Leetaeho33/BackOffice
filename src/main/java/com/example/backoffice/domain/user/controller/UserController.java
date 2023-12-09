@@ -44,13 +44,7 @@ public class UserController {
         return userService.getMypage(userDetails.getUser());
     }
 
-    //관리자용 원하는 유저의 마이페이지 확인
-    @GetMapping("/{userId}")
-    public ResponseEntity<MypageResponseDTO> getUserPage (@PathVariable Long userId,
-                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        MypageResponseDTO responseDto = userService.getUserPage(userId,userDetails.getUser());
-        return ResponseEntity.ok(responseDto);
-    }
+
 
     // 의논 사항 : 응답에 비밀번호를 응답할지? 응답하지 않을지? 지금은 응답하고 있습니다.
     @PatchMapping
@@ -71,6 +65,21 @@ public class UserController {
                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.checkLogin(userDetails.getUser());
         session.invalidate();
+        return ResponseEntity.ok(CommonCode.OK.getMessage());
+    }
+
+    //관리자용 원하는 유저의 마이페이지 확인
+    @GetMapping("/{userId}")
+    public ResponseEntity<MypageResponseDTO> getUserPage (@PathVariable Long userId,
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        MypageResponseDTO responseDto = userService.getUserPage(userId,userDetails.getUser());
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetail) {
+        userService.deleteUser(userId, userDetail.getUser());
         return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 

@@ -14,7 +14,7 @@ public enum UserErrorCode implements ErrorCode {
     PASSWORD_IS_NOT_MATCH(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않아요!"),
     RECNTLY_SET_PASSWORD(HttpStatus.FORBIDDEN,"최근 3번안에 사용한 비밀번호는 사용할 수 없어요!"),
     NON_LOGIN_USER(HttpStatus.NOT_FOUND,"로그인 된 유저가 아니에요!"),
-    NON_USERPAGE(HttpStatus.NOT_FOUND, "존재하지 않는 유저페이지 입니다.");
+    NON_USER(HttpStatus.NOT_FOUND, "존재하지 않는 유저 입니다.");
     private final HttpStatus httpStatus;
     private final String message;
 }
