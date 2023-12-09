@@ -38,8 +38,7 @@ public class UserController {
     public ResponseEntity<String> login(@Validated @RequestBody LoginRequestDTO loginRequestDTO,
                                                    HttpServletResponse response){
         userService.login(loginRequestDTO);
-        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createAccessToken(loginRequestDTO.getUsername()));
-        response.setHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,jwtUtil.createRefreshToken());
+        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDTO.getUsername()));
         return ResponseEntity.ok(CommonCode.OK.getMessage());
     }
 
