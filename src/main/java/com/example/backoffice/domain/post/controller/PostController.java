@@ -38,11 +38,24 @@ public class PostController {
         return ResponseEntity.ok(responseDtos);
     }
 
+    @GetMapping("/mbti")
+    public ResponseEntity<List<GetAllPostResponseDto>> getMbtiPostList(@RequestParam String mbti,
+                                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<GetAllPostResponseDto> responseDtos = postService.getMbtiPostList(mbti, userDetails.getUser());
+        return ResponseEntity.ok(responseDtos);
+    }
+
     @PatchMapping("/{postId}")
     public ResponseEntity<UpdatePostResponseDto> updatePost(@PathVariable Long postId,
                                                             @RequestBody UpdatePostRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UpdatePostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    @DeleteMapping("/{postId}")
+    public void deletePost(@PathVariable Long postId,
+                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(postId, userDetails.getUser());
     }
 }

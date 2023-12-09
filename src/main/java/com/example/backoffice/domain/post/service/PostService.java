@@ -6,15 +6,19 @@ import com.example.backoffice.domain.post.dto.*;
 import com.example.backoffice.domain.post.entity.Post;
 import com.example.backoffice.domain.post.exception.PostErrorCode;
 import com.example.backoffice.domain.post.exception.PostExistException;
+import com.example.backoffice.domain.post.repository.MbtiPostRepository;
 import com.example.backoffice.domain.post.repository.PostRepository;
 import com.example.backoffice.domain.postLike.entity.PostLike;
 import com.example.backoffice.domain.user.entity.User;
+import com.example.backoffice.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.backoffice.domain.post.constant.PostConstant.DEFAULT_LIKE_CNT;
@@ -26,6 +30,7 @@ import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.D
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MbtiPostRepository mbtiPostRepository;
 
     @Transactional
     public CreatePostResponseDto createPost(CreatePostRequestDto createPostRequestDto, User user) {
@@ -44,7 +49,7 @@ public class PostService {
     @Transactional
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto requestDto, User user) {
         Post post = findById(postId);
-        findByIdUsername(post, user.getUsername());
+        findByIdUsername(post, user);
         post.updatePost(requestDto);
 
         return UpdatePostResponseDto.of(post, getPostLiked(user, post));
@@ -65,11 +70,23 @@ public class PostService {
             .collect(Collectors.toList());
     }
 
+    public List<GetAllPostResponseDto> getMbtiPostList(String mbti, User user) {
+        String[] mbtiSplit = mbti.split(""); // mbti = it => {"I", "T"}
+        Set<Post> mbtiPostSet = new HashSet<>();
+        for (int i = 0; i < mbtiSplit.length; i++) {
+            mbtiPostSet.addAll(mbtiPostRepository.findAllByMbti(mbtiSplit[i]));
+        }
+        return mbtiPostSet.stream()
+            .map(post -> GetAllPostResponseDto.of(post, getPostLiked(user, post)))
+            .collect(Collectors.toList());
+    }
 
-
-
-
-
+    @Transactional
+    public void deletePost(Long postId, User user) {
+        Post post = findById(postId);
+        findByIdUsername(post, user);
+        postRepository.delete(post);
+    }
 
     private List<CommentResponseDto> commentList(Post post) {
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
@@ -96,8 +113,8 @@ public class PostService {
             .orElse(DEFAULT_POST_LIKE);
     }
 
-    private void findByIdUsername(Post post, String username) {
-        if (!post.getUser().getUsername().equals(username)) {
+    private void findByIdUsername(Post post, User user) {
+        if (!post.getUser().getUsername().equals(user.getUsername()) && user.getRole().equals(UserRoleEnum.USER)) {
             throw new PostExistException(PostErrorCode.NO_AUTHORITY);
         }
     }

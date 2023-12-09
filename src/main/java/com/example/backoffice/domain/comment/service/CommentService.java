@@ -11,6 +11,7 @@ import com.example.backoffice.domain.post.exception.PostErrorCode;
 import com.example.backoffice.domain.post.exception.PostExistException;
 import com.example.backoffice.domain.post.repository.PostRepository;
 import com.example.backoffice.domain.user.entity.User;
+import com.example.backoffice.domain.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,7 +115,7 @@ public class CommentService {
 
 
         // 객체 동등성 비교
-        if (!Objects.equals(comment.getUser().getId(), user.getId())) {
+        if (!Objects.equals(comment.getUser().getId(), user.getId())&&user.getRole().equals(UserRoleEnum.USER)) {
             throw new CommentExistsException(CommentErrorCode.UNAUTHORIZED_USER);
         }
     }
