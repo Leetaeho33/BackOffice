@@ -59,6 +59,6 @@ public class PostController {
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(postId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK.value()).
-                body(new CommonResponseDTO("댓글이 삭제되었습니다.", HttpStatus.OK.value()));
+                body(new CommonResponseDTO("게시글이 삭제되었습니다.", HttpStatus.OK.value()));
     }
 }
