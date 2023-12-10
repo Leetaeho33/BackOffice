@@ -42,6 +42,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<PasswordHistory> passwordHistoryList;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<PasswordHistory> delPasswordHistoryList;
+
+
+
     public void updateUser(UpdateUserRequestDTO userRequestDTO){
         this.intro = userRequestDTO.getIntro();
         this.mbti = userRequestDTO.getMbti();
