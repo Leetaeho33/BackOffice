@@ -167,6 +167,7 @@ public class UserService {
     }
 
 
+
     @Transactional
     public Long deleteUser(Long userId, User requestingUser) {
         // 사용자의 역할 확인

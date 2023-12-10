@@ -46,6 +46,7 @@ public class User {
     private List<PasswordHistory> delPasswordHistoryList;
 
 
+
     public void updateUser(UpdateUserRequestDTO userRequestDTO){
         this.intro = userRequestDTO.getIntro();
         this.mbti = userRequestDTO.getMbti();
