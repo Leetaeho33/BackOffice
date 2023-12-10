@@ -1,5 +1,6 @@
 package com.example.backoffice.domain.postLike.service;
 
+import com.example.backoffice.domain.comment.dto.CommentResponseDto;
 import com.example.backoffice.domain.comment.entity.Comment;
 import com.example.backoffice.domain.commentLike.entity.Likes;
 import com.example.backoffice.domain.post.dto.GetPostResponseDto;
@@ -16,7 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.example.backoffice.domain.comment.entity.QComment.comment;
+import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.DEFAULT_POST_LIKE;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +37,10 @@ public class PostLikeService {
         Boolean updated = postLike.pressLike();
         post.updatePostLikeCnt(updated);
 
-        return new GetPostResponseDto(post);
+
+        List<CommentResponseDto> commentResponseDtoList = postService.commentList(post);
+
+        return GetPostResponseDto.of(post ,updated,commentResponseDtoList);
 
     }
 
@@ -44,7 +51,7 @@ public class PostLikeService {
         PostLike postLike = PostLike.builder()
                 .post(post)
                 .user(user)
-                .isPostLiked(true)
+                .isPostLiked(DEFAULT_POST_LIKE)
                 .build();
 
         // 생성된 좋아요 엔티티를 저장하고 반환

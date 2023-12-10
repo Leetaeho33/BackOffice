@@ -88,7 +88,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    private List<CommentResponseDto> commentList(Post post) {
+    public List<CommentResponseDto> commentList(Post post) {
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         List<Comment> commentList = post.getCommentList();
         commentList.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
