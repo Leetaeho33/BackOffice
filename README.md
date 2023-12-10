@@ -10,6 +10,52 @@ API 명세서입니다. 각 케이스별 성공 예시와 실패 예시가 있�
 
 https://documenter.getpostman.com/view/30925785/2s9YkhfiQp
 
-#와이어 프레임
+# 와이어 프레임
 
 "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FZdXfWLx0J8QxzlRAQWeZIK%2FUntitled%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3DS1cV4ZjbQspEFKxk-1"
+
+├─domain
+│  │      │              │  ├─comment
+│  │      │              │  │  ├─controller
+│  │      │              │  │  ├─dto
+│  │      │              │  │  ├─entity
+│  │      │              │  │  ├─exception
+│  │      │              │  │  ├─repository
+│  │      │              │  │  └─service
+│  │      │              │  ├─commentLike
+│  │      │              │  │  ├─controller
+│  │      │              │  │  ├─dto
+│  │      │              │  │  ├─entity
+│  │      │              │  │  ├─repository
+│  │      │              │  │  └─service
+│  │      │              │  ├─post
+│  │      │              │  │  ├─constant
+│  │      │              │  │  ├─controller
+│  │      │              │  │  ├─dto
+│  │      │              │  │  ├─entity
+│  │      │              │  │  ├─exception
+│  │      │              │  │  ├─repository
+│  │      │              │  │  └─service
+│  │      │              │  ├─postLike
+│  │      │              │  │  ├─constant
+│  │      │              │  │  ├─controller
+│  │      │              │  │  ├─entity
+│  │      │              │  │  ├─repository
+│  │      │              │  │  └─service
+│  │      │              │  ├─user
+│  │      │              │  │  ├─controller
+│  │      │              │  │  ├─dto
+│  │      │              │  │  ├─entity
+│  │      │              │  │  ├─exception
+│  │      │              │  │  ├─repository
+│  │      │              │  │  └─service
+│  │      │              │  └─utils
+│  │      │              └─global
+│  │      │                  ├─common
+│  │      │                  ├─config
+│  │      │                  ├─exception
+│  │      │                  │  ├─advice
+│  │      │                  │  └─response
+│  │      │                  └─security
+
+
