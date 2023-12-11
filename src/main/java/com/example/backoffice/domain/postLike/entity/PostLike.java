@@ -3,13 +3,14 @@ package com.example.backoffice.domain.postLike.entity;
 import com.example.backoffice.domain.post.entity.Post;
 import com.example.backoffice.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike {
 
     @Id
@@ -35,7 +36,7 @@ public class PostLike {
         this.post = post;
     }
 
-    public Boolean pressLike() {
+    public Boolean clickPostLike() {
         this.isPostLiked = !isPostLiked;
         return this.isPostLiked;
     }

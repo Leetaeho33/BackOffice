@@ -99,7 +99,7 @@ public class PostService {
         return commentResponseDtoList;
     }
 
-    private Post findById(Long postId) {
+    public Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(
             () -> new PostExistException(PostErrorCode.NO_POST));
     }
