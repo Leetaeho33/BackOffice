@@ -3,6 +3,7 @@ package com.example.backoffice.domain.post.controller;
 import com.example.backoffice.domain.post.dto.*;
 import com.example.backoffice.domain.post.service.PostService;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
+import com.example.backoffice.global.common.CommonResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,12 +51,14 @@ public class PostController {
                                                             @RequestBody UpdatePostRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UpdatePostResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(responseDto);
     }
 
     @DeleteMapping("/{postId}")
-    public void deletePost(@PathVariable Long postId,
-                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<CommonResponseDTO> deletePost(@PathVariable Long postId,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         postService.deletePost(postId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK.value()).
+                body(new CommonResponseDTO("댓글이 삭제되었습니다.", HttpStatus.OK.value()));
     }
 }

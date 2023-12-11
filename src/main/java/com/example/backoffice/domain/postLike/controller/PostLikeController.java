@@ -1,5 +1,4 @@
 package com.example.backoffice.domain.postLike.controller;
-
 import com.example.backoffice.domain.postLike.dto.ResponsePostLikeDto;
 import com.example.backoffice.domain.postLike.service.PostLIkeService;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;

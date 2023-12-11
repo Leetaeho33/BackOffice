@@ -73,8 +73,8 @@ public class PostService {
     public List<GetAllPostResponseDto> getMbtiPostList(String mbti, User user) {
         String[] mbtiSplit = mbti.split(""); // mbti = it => {"I", "T"}
         Set<Post> mbtiPostSet = new HashSet<>();
-        for (int i = 0; i < mbtiSplit.length; i++) {
-            mbtiPostSet.addAll(mbtiPostRepository.findAllByMbti(mbtiSplit[i]));
+        for (String s : mbtiSplit) {
+            mbtiPostSet.addAll(mbtiPostRepository.findAllByMbti(s));
         }
         return mbtiPostSet.stream()
             .map(post -> GetAllPostResponseDto.of(post, getPostLiked(user, post)))
