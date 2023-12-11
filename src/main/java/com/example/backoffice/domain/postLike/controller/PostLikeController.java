@@ -1,4 +1,5 @@
 package com.example.backoffice.domain.postLike.controller;
+
 import com.example.backoffice.domain.postLike.dto.ResponsePostLikeDto;
 import com.example.backoffice.domain.postLike.service.PostLikeService;
 import com.example.backoffice.domain.user.entity.UserDetailsImpl;
@@ -18,8 +19,7 @@ public class PostLikeController {
     private final PostLikeService postLikeService;
 
     @PatchMapping
-    public ResponseEntity<ResponsePostLikeDto> pressLike(@PathVariable Long postId,
-                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponsePostLikeDto> pressLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ResponsePostLikeDto responsePostLikeDto = postLikeService.switchLikePost(postId, userDetails.getUser());
 
         return ResponseEntity.ok(responsePostLikeDto);
