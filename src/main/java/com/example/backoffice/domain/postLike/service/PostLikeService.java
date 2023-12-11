@@ -14,6 +14,7 @@ import static com.example.backoffice.domain.postLike.constant.PostLikeConstant.D
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostLikeService {
 
     private final PostService postService;
