@@ -167,17 +167,21 @@ public class UserService {
     }
 
 
-    public Long deleteUser(Long userId, User user) {
-        // 사용자의 역할 확인
-        checkUserRole(user);
 
-        // 해당 댓글이 DB에 존재하는지 확인
-        User Id = findById(userId);
-         // 댓글 삭제
-        userRepository.delete(Id);
+    @Transactional
+    public Long deleteUser(Long userId, User requestingUser) {
+        // 사용자의 역할 확인
+        checkUserRole(requestingUser);
+
+        // 특정 사용자 식별자로 사용자 조회
+        User userToDelete = findById(userId);
+
+        // 댓글 삭제
+        userRepository.delete(userToDelete);
 
         return userId;
     }
+
 
     // 특정 사용자 식별자로 사용자를 조회하는 메소드.
     //userId 사용자 식별자
