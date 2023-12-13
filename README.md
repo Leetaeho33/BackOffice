@@ -18,3 +18,13 @@ https://documenter.getpostman.com/view/30925785/2s9YkhfiQp
 프론트엔드와 협업시 예상 와이어프레임 입니다.
 
 "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FZdXfWLx0J8QxzlRAQWeZIK%2FUntitled%3Ftype%3Ddesign%26node-id%3D0%253A1%26mode%3Ddesign%26t%3DS1cV4ZjbQspEFKxk-1"
+
+# 기술 스택
+
+Spring Boot 3.2.0
+
+Spring Security
+
+MySql
+
+QueryDsl 5.0.0
